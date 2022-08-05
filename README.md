@@ -5,7 +5,7 @@ Displaying the device screen in UnityEditor
 
 ## 概要
 
-実機で表示している内容をUnityEditor上で再生するViewerです。
+実機の画面をUnityEditor上で表示するViewerです。
 
 <img width="800" alt="PlayerView" src="https://user-images.githubusercontent.com/29646672/137237372-637a0a77-5913-4bfc-835e-03737e0a5013.png">
 
