@@ -1,4 +1,6 @@
 # UnityPlayerView
+
+![GitHub package.json version](https://img.shields.io/github/package-json/v/katsumasa/UnityPlayerView)
 Displaying the device screen in UnityEditor
 
 ## 概要
