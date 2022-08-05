@@ -1,0 +1,25 @@
+{
+  "name": "com.utj.unityplayerview",
+  "displayName": "UnityPlayerView",
+  "version": "0.1.0",
+  "unity": "2019.4",
+  "keywords": [
+    "unity",
+    "editor",
+    "tools"
+  ],
+  "description": "Displaying the device screen in UnityEditor",
+  "dependencies": {},
+  "author": {
+    "name": "Katsumasa.Kimura",
+    "email": "katsumasa@unity3d.com",
+    "url": "https://github.com/katsumasa"
+  },
+  "relatedPackages": {},
+  "upmCi": {},
+  "repository": {
+    "url": "https://github.com/katsumasa/UnityPlayerView.git",
+    "type": "git",
+    "revision": ""
+  }
+}
