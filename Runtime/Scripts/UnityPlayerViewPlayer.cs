@@ -44,6 +44,9 @@
             AsyncGPUReadBack,
         }
 
+        static UnityPlayerViewPlayer m_Instance;
+
+        [SerializeField, Tooltip("Enable DontDestroyOnLoad")] bool m_IsDontDestroyOnLoadEnabled;
 
         CaptureMode captureMode;
         int frameCount;
@@ -68,6 +71,19 @@
         // Start is called before the first frame update
         void Start()
         {
+            if(m_Instance != null)
+            {
+                DestroyImmediate(this);
+                return;
+            }
+
+            m_Instance = this;
+
+            if (m_IsDontDestroyOnLoadEnabled)
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
+
             isPause = false;
             isPlay = false;
             isFinish = false;
@@ -100,6 +116,12 @@
 
         private void OnDestroy()
         {
+            if (m_Instance != this)
+            {
+                return;
+            }
+            m_Instance = null;
+
             #if UNITY_2019_1_OR_NEWER
             // 処理が残っているAsyncGPUReadbackが全て完了する迄待つ
             AsyncGPUReadback.WaitAllRequests();
