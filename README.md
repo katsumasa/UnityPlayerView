@@ -1,5 +1,8 @@
 # UnityPlayerView
-Displaying the device screen in UnityEditor
+
+![GitHub package.json version](https://img.shields.io/github/package-json/v/katsumasa/UnityPlayerView)　　
+
+Viewer that plays the content displayed on the actual device in UnityEditor.
 
 ## 概要
 
