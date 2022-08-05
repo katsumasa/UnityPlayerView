@@ -1,0 +1,15 @@
+{
+    "name": "UTJ.UnityPlayerView",
+    "references": [
+        "GUID:0e80379a029da2e44b192fcaf767e3af"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

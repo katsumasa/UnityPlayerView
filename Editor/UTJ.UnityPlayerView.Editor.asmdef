@@ -1,0 +1,18 @@
+{
+    "name": "UTJ.UnityPlayerView.Editor",
+    "references": [
+        "GUID:ee24b35414445f94f94d86fdc03ea87b",
+        "GUID:fea82b92eb7ce2f40a863ea006b625ba"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
