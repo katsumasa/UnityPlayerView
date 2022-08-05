@@ -1,5 +1,6 @@
 # UnityPlayerView
-Displaying the device screen in UnityEditor
+
+Viewer that plays the content displayed on the actual device in UnityEditor.
 
 ## 概要
 
