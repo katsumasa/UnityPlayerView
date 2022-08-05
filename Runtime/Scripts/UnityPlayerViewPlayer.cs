@@ -201,7 +201,7 @@
                                 try
                                 {
                                     bf.Serialize(ms, header);
-                                    PlayerConnection.instance.Send(UnityPlayerView.kMsgSendPlayerToEditorHeader, ms.ToArray());
+                                    PlayerConnection.instance.Send(UnityPlayerView.kMsgSendPlayerToEditorHeader, ms.GetBuffer());
                                 }
                                 finally
                                 {
@@ -230,7 +230,7 @@
                                 try
                                 {
                                     bf.Serialize(ms, header);                                    
-                                    PlayerConnection.instance.Send(UnityPlayerView.kMsgSendPlayerToEditorHeader, ms.ToArray());
+                                    PlayerConnection.instance.Send(UnityPlayerView.kMsgSendPlayerToEditorHeader, ms.GetBuffer());
                                 }
                                 finally
                                 {
