@@ -221,7 +221,7 @@ namespace UTJ.UnityPlayerView.Editor
                 }
                 if (Event.current.isKey)
                 {
-                    Debug.Log($"{Event.current.keyCode}");
+                    //Debug.Log($"{Event.current.keyCode}");
 
                     switch (Event.current.keyCode)
                     {                        
