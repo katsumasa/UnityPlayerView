@@ -16,6 +16,7 @@ using PlayerConnectionGUILayout = UnityEditor.Networking.PlayerConnection.Player
 #endif
 using System.Security.AccessControl;
 using System;
+using UnityEditor.Android;
 
 
 namespace UTJ.UnityPlayerView.Editor
@@ -46,6 +47,9 @@ namespace UTJ.UnityPlayerView.Editor
             public static readonly GUIContent RecOffContents = new GUIContent((Texture2D)EditorGUIUtility.Load("d_Record Off@2x"),"Start Record");
             public static readonly GUIContent FolderContents = new GUIContent((Texture2D)EditorGUIUtility.Load("d_OpenedFolder Icon"),"Set Save Location");
             public static readonly GUIContent CaptureContents = new GUIContent((Texture2D)EditorGUIUtility.Load("d_SceneViewCamera@2x"),"Capture Screen");
+
+
+            public static readonly GUIContent TouchEvent = new GUIContent("Enabled TouchEvent","Enabled Touch Event.(Android only)");
         }
 
 
@@ -58,6 +62,9 @@ namespace UTJ.UnityPlayerView.Editor
         IConnectionState attachProfilerState;                
         UnityPlayerView.EditorSendData editorSendData;
         Texture2D playerViewTexture;
+        
+
+
         [SerializeField] string recordPath;
         [SerializeField] bool isRecord;
         [SerializeField] int recordMaxFrame;
@@ -65,6 +72,7 @@ namespace UTJ.UnityPlayerView.Editor
         [SerializeField] bool isPlay;
         [SerializeField] UnityPlayerViewPlayer.TextureHeader textureHeader;
         [SerializeField] List<int> m_players;
+        [SerializeField] bool m_EnabledTouchEvent = false;
 
         /// <summary>
         /// 関数の定義 
@@ -146,9 +154,113 @@ namespace UTJ.UnityPlayerView.Editor
             //ChangeTitleContent();
             GUILayoutConnect();
             UnityEditor.EditorGUILayout.Separator();
-            GUILayoutPlayView();
+            var rect = GUILayoutPlayView();
+
+            if (m_EnabledTouchEvent)
+            {
+                TouchEventExec(rect);
+            }
         }
 
+        
+
+        private void TouchEventExec(Rect rect)
+        {
+            if (playerViewTexture != null)
+            {
+                float scale = 0f;
+                if (playerViewTexture.width > playerViewTexture.height)
+                {
+                    scale = rect.width / playerViewTexture.width;
+                }
+                else
+                {
+                    scale = rect.height / playerViewTexture.height;
+                }
+                var v2 = Event.current.mousePosition;
+                var ofstx = 0;
+                var ofsty = 0;
+                if (rect.width > playerViewTexture.width * scale)
+                {
+                    ofstx = (int)((float)rect.width - playerViewTexture.width * scale) / 2;
+                }
+                if (rect.height > playerViewTexture.height * scale)
+                {
+                    ofsty = (int)((float)rect.height - playerViewTexture.height * scale) / 2;
+                }
+                var x = v2.x - (rect.x + ofstx);
+                var y = v2.y - (rect.y + ofsty);
+                x = x / scale;
+                y = y / scale;
+                x = Mathf.Max(x, 0);
+                y = Mathf.Max(y, 0);
+                x = Mathf.Min(x, playerViewTexture.width);
+                y = Mathf.Min(y, playerViewTexture.height);
+
+                switch (Event.current.type)
+                {
+                    case EventType.MouseDown:
+                        {
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "touchscreen", "motionevent", "DOWN", $"{x}", $"{y}" }, "UnityPlayerView");
+                        }
+                        break;
+
+                    case EventType.MouseMove:
+                    case EventType.MouseDrag:
+                        {
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "touchscreen", "motionevent", "MOVE", $"{x}", $"{y}" }, "UnityPlayerView");
+                        }
+                        break;
+
+                    case EventType.MouseUp:
+                        {
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "touchscreen", "motionevent", "UP", $"{x}", $"{y}" }, "UnityPlayerView");
+                        }
+                        break;
+                    
+                }
+                if (Event.current.isKey)
+                {
+                    //Debug.Log($"{Event.current.keyCode}");
+
+                    switch (Event.current.keyCode)
+                    {                        
+
+                        case KeyCode.Home:
+                            {
+                                ADB.GetInstance().Run(new string[] { "shell", "input", "keyboard", "keyevent", "3" }, "UnityPlayerSync");
+                            }
+                            break;
+
+                        case KeyCode.Escape:
+                            {
+                                ADB.GetInstance().Run(new string[] { "shell","input","keyboard","keyevent","4" }, "UnityPlayerSync");
+                            }
+                            break;
+
+                        case KeyCode.Space:
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "keyboard", "keyevent", "62" }, "UnityPlayerSync");
+                            break;
+
+                        case KeyCode.A:
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "keyboard", "keyevent", "29" }, "UnityPlayerSync");
+                            break;
+
+                        case KeyCode.D:
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "keyboard", "keyevent", "32" }, "UnityPlayerSync");
+                            break;
+
+                        case KeyCode.S:
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "keyboard", "keyevent", "47" }, "UnityPlayerSync");
+                            break;
+
+                        case KeyCode.W:
+                            ADB.GetInstance().Run(new string[] { "shell", "input", "keyboard", "keyevent", "51" }, "UnityPlayerSync");
+                            break;
+                    }
+                }
+            }
+        }
 
 
 
@@ -290,7 +402,6 @@ namespace UTJ.UnityPlayerView.Editor
                     SendMessage(editorSendData);
                 }
             }
-
             
             // Rec
             {
@@ -358,7 +469,7 @@ namespace UTJ.UnityPlayerView.Editor
         // ----------------------------------------------------------------------------------------
         // <summary> PlayView GUIの描画 </summary>
         // ----------------------------------------------------------------------------------------
-        private void GUILayoutPlayView()
+        private Rect GUILayoutPlayView()
         {
             if (recordPath == null || recordPath.Length == 0)
             {
@@ -370,12 +481,15 @@ namespace UTJ.UnityPlayerView.Editor
             editorSendData.isUseAsyncGPUReadback = UnityEditor.EditorGUILayout.ToggleLeft("Enable Async GPU Readback", editorSendData.isUseAsyncGPUReadback);
             UnityEditor.EditorGUI.EndDisabledGroup();
 #endif
+            m_EnabledTouchEvent = EditorGUILayout.ToggleLeft(Style.TouchEvent, m_EnabledTouchEvent);
             UnityEditor.EditorGUI.BeginDisabledGroup(isPlay);
             editorSendData.frameCount = UnityEditor.EditorGUILayout.IntField("Reflesh Interval", editorSendData.frameCount, UnityEngine.GUILayout.ExpandWidth(false));
             editorSendData.frameCount = Math.Max(0, editorSendData.frameCount);
             UnityEditor.EditorGUI.EndDisabledGroup();
             UnityEditor.EditorGUILayout.LabelField(new GUIContent("Record Folder","Record and Capture Folder"),new GUIContent(recordPath));                        
             
+            
+
             // ここでキャプチャ処理
             if (playerViewTexture != null && recordPath != null && recordPath.Length != 0 && recordCount < recordMaxFrame　&& isRecord){
                 var pngData = playerViewTexture.EncodeToPNG();
@@ -417,11 +531,12 @@ namespace UTJ.UnityPlayerView.Editor
             UnityEditor.EditorGUILayout.EndHorizontal();
             UnityEditor.EditorGUI.EndDisabledGroup();
 
+            var r1 = UnityEditor.EditorGUILayout.GetControlRect();
+            var r2 = new Rect(r1.x, r1.y, r1.width, position.height - (r1.y + r1.height) - 30.0f);
             // 描画
             if (playerViewTexture != null)
             {
-                var r1 = UnityEditor.EditorGUILayout.GetControlRect();               
-                var r2 = new Rect(r1.x, r1.y, r1.width, position.height - (r1.y + r1.height) - 30.0f);
+                
 
                 UnityEditor.EditorGUI.DrawPreviewTexture(
                     r2,
@@ -430,7 +545,8 @@ namespace UTJ.UnityPlayerView.Editor
                     ScaleMode.ScaleToFit
                     );
                // GUILayoutUtility.GetRect(r2.width, r2.height);
-            }          
+            }
+            return r2;
         }
 
 
