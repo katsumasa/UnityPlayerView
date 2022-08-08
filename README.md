@@ -8,7 +8,7 @@ Viewer that plays the content displayed on the actual device in UnityEditor.
 
 実機の画面をUnityEditor上で表示するViewerです。
 
-<img width="800" alt="PlayerView" src="https://user-images.githubusercontent.com/29646672/137237372-637a0a77-5913-4bfc-835e-03737e0a5013.png">
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/29646672/183345346-e26e2a75-7a9a-4596-a6b7-59bd2c021c74.png">
 
 
 ## セットアップ
