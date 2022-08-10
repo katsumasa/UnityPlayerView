@@ -10,6 +10,9 @@ Viewer that plays the content displayed on the actual device in UnityEditor.
 
 <img width="800" alt="image" src="https://user-images.githubusercontent.com/29646672/183345346-e26e2a75-7a9a-4596-a6b7-59bd2c021c74.png">
 
+## GIF
+
+<img width="800" alt="UnityChoseKunDemo03" src="https://user-images.githubusercontent.com/29646672/137236618-7539f774-b200-45e9-a4d5-87e7ceb6b208.gif">
 
 ## セットアップ
 
